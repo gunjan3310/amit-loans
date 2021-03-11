@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "453615500739",
+    "project_id": "loan-app-8ed5d",
+    "storage_bucket": "loan-app-8ed5d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:453615500739:android:abe90b116a58438d751176",
+        "android_client_info": {
+          "package_name": "com.gunjanyadav.amitloans"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "453615500739-icpc7l0inalpbak2v9lchvuefq628pfj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR-wRAKNm60UYcZeEA8lDaOT9SP8Hv34Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "453615500739-icpc7l0inalpbak2v9lchvuefq628pfj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
