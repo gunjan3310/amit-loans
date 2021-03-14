@@ -43,24 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        /*
-        var loanslist  = ArrayList<Loan>()
-        loanslist.add(Loan(1000,1.5f,false))
-        loanslist.add(Loan(3000,1.5f,true))
-        loanslist.add(Loan(5000,1.5f,true))
-        loanslist.add(Loan(7000,1.5f,true))
-        loanslist.add(Loan(10000,1.5f,true))
-        loanslist.add(Loan(1000,1.5f,false))
-        loanslist.add(Loan(3000,1.5f,true))
-        loanslist.add(Loan(5000,1.5f,true))
-        loanslist.add(Loan(7000,1.5f,true))
-        loanslist.add(Loan(10000,1.5f,true))
 
-        recyclerView = findViewById(R.id.loanslist)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        loansListAdapter = ListAdapter(applicationContext,loanslist)
-        recyclerView.adapter = loansListAdapter
-        */
         actionBar?.setTitle("Amit Loans")
 
 

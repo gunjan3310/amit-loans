@@ -14,6 +14,9 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.InputStream
 
 
@@ -80,15 +83,9 @@ class UserRegister : AppCompatActivity() {
             val validated: Boolean = validateTextFields(fullName) && validateTextFields(email) && validateTextFields(password) &&
                     validateTextFields(repassword) && validateTextFields(phoneNumber) && validateTextFields(DOB)
                     && validatePicturesSelected(ctznPictureFront) && validatePicturesSelected(ctznPictureBack) && validatePicturesSelected(studentIdFront) && validatePicturesSelected(studentIdBack)
-                    && validatePicturesSelected(profilePicture) &&  validateTermsAndConditions(termAgreement)
+                    && validatePicturesSelected(profilePicture) &&  validateTermsAndConditions(termAgreement) && validateMatchPasswords(password,repassword)
             if(validated==true)createNewUserAndUploadDocuments()
-            setContentView(R.layout.registration_finished)
-            val homeButton = findViewById<Button>(R.id.btnHome)
-            homeButton.setOnClickListener {
-                val intent = Intent(this,MainActivity::class.java)
-                startActivityIfNeeded(intent,0)
-                finish()
-            }
+
 
 
         }
@@ -98,7 +95,14 @@ class UserRegister : AppCompatActivity() {
 
 
     }
-
+    private fun validateMatchPasswords(password: EditText, repassword:EditText ):Boolean{
+        if(password.text.toString().equals(password.text.toString())){
+            return true
+        }else{
+            Toast.makeText(this,"Both passwords must be same",Toast.LENGTH_LONG).show()
+            return false
+        }
+    }
     private fun validateTermsAndConditions(view:CheckBox):Boolean{
         if(!view.isChecked){
             Toast.makeText(this,"Do accept Terms and Conditions", Toast.LENGTH_SHORT).show()
@@ -190,38 +194,40 @@ class UserRegister : AppCompatActivity() {
 
 
 
-    private fun uploadUserData(uid: String){
-        val pictures = arrayListOf("Profile Picture","Citizenship Front","Citizenship Back","Student Id Front", "Student Id Back")
-        val registrationPictureUpload = UserPictureUploader(user.uid.toString())
-        registrationPictureUpload.firebaseUploadPicture(this,user.profilePictureUri, "profilePicture",pictures.get(0))
-        registrationPictureUpload.firebaseUploadPicture(this, user.ctznFUri, "ctznFront",pictures.get(1))
-        registrationPictureUpload.firebaseUploadPicture(this, user.ctznBUri, "ctznBack",pictures.get(2))
-        registrationPictureUpload.firebaseUploadPicture(this, user.stdIdFUri, "stdIdF",pictures.get(3))
-        registrationPictureUpload.firebaseUploadPicture(this, user.stdIdBUri, "stdIdB",pictures.get(4))
 
+    private fun uploadPicture(uid:String,n:Int){
+        val title = arrayListOf("Profile Picture","Citizenship Front","Citizenship Back","Student Id Front", "Student Id Back")
+        val filenames = arrayListOf<String>("profilePicture","ctznFront","ctznBack","stdIdF","stdIdB")
+        val uriList = arrayListOf<Uri>(user.profilePictureUri,user.ctznFUri,user.ctznBUri,user.stdIdFUri,user.stdIdBUri)
+        if(n != -1){
+            var picture = FirebaseStorage.getInstance().reference.child("new_registration/$uid/${filenames.get(n)}.jpg")
+            val pd: ProgressDialog
+            pd = ProgressDialog(this)
+            pd.setTitle("Uploading ${title.get(n)}")
+            pd.setCancelable(false)
+            pd.setCanceledOnTouchOutside(false)
+            pd.show()
 
+            picture.putFile(uriList.get(n)).addOnProgressListener { task ->
+                pd.setMessage("${100 * task.bytesTransferred / task.totalByteCount}% of 100% completed")
+            }.addOnCompleteListener {
+                pd.dismiss()
+                uploadPicture(uid,n-1)
 
-    }
-
-    class UserPictureUploader(val uid:String){
-            fun firebaseUploadPicture(context: Context, uri: Uri, filename: String,dialogTitle:String){
-                var picture = FirebaseStorage.getInstance().reference.child("new_registration/$uid/${filename}.jpg")
-                val pd:ProgressDialog
-                pd = ProgressDialog(context)
-                pd.setTitle("Uploading ${dialogTitle}")
-                pd.setCancelable(false)
-                pd.setCanceledOnTouchOutside(false)
-                pd.show()
-
-                picture.putFile(uri).addOnProgressListener {task ->
-                    pd.setMessage( "${100 * task.bytesTransferred / task.totalByteCount }% of 100% completed")
-                }.addOnCompleteListener{
-                    pd.dismiss()
-
-                }
             }
 
+        }else{
+            setContentView(R.layout.registration_finished)
+            val homeButton = findViewById<Button>(R.id.btnHome)
+            homeButton.setOnClickListener {
+                val intent = Intent(this,MainActivity::class.java)
+                startActivityIfNeeded(intent,0)
+                finish()
+            }
+        }
     }
+
+
 
 
 
@@ -239,7 +245,7 @@ class UserRegister : AppCompatActivity() {
                     if(!it.isSuccessful)Toast.makeText(this, "Email \"${user.email}\" already used", Toast.LENGTH_LONG).show() else{
                         user.uid = it.result?.user?.uid!!
                         addUserRegistrationToDatabase(user.uid)
-                        uploadUserData(user.uid)
+                        uploadPicture(user.uid,4)
 
 
                     }
