@@ -40,7 +40,7 @@ class ListAdapter(val context: Context, list: ArrayList<Loan>): RecyclerView.Ada
         holder.interest.setText(item.loanInterest.toString())
         holder.isLocked.setImageResource(if(item.isUnlocked == true)R.drawable.ic_launcher_foreground else R.drawable.ic_launcher_background)
         holder.itemView.setOnClickListener{
-            Toast.makeText(context,"Clicked $position",Toast.LENGTH_SHORT).show()
+
 
             val auth = FirebaseAuth.getInstance().currentUser
             if(auth == null){
@@ -48,6 +48,15 @@ class ListAdapter(val context: Context, list: ArrayList<Loan>): RecyclerView.Ada
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
                 context.startActivity(intent)
+            }else{
+                if(item.isUnlocked == true)
+                {
+                    val i = Intent(context,RequestLoanActivity::class.java)
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    i.putExtra("loanItem",holder.loanAmount.text.toString())
+                    context.startActivity(i)
+
+                } else Toast.makeText(context,"This loan is unlocked",Toast.LENGTH_SHORT).show()
             }
 
 

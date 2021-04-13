@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UserData() {
     lateinit var uid:String
+    lateinit var fullname:String
     lateinit var email:String
     lateinit var number:String
     lateinit var profilePictureUri: Uri

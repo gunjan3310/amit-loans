@@ -9,6 +9,7 @@ import android.media.ThumbnailUtils
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -233,22 +234,26 @@ class UserRegister : AppCompatActivity() {
 
     private fun createNewUserAndUploadDocuments(){
         user.number = phoneNumber.text.toString()
+        user.fullname = fullName.text.toString()
         user.email = email.text.toString()
         user.DOB = DOB.text.toString()
 
 
 
         var auth = FirebaseAuth.getInstance()
-        auth.createUserWithEmailAndPassword(user.email, "qwdfgsdfgsdfgertyuiop[]")
+        auth.createUserWithEmailAndPassword(user.email, password.text.toString())
                 .addOnCompleteListener(this){
 
-                    if(!it.isSuccessful)Toast.makeText(this, "Email \"${user.email}\" already used", Toast.LENGTH_LONG).show() else{
+                    if(!it.isSuccessful)Toast.makeText(this, "Email \"${user.email}\" already used", Toast.LENGTH_LONG).show()
+                    else{
                         user.uid = it.result?.user?.uid!!
                         addUserRegistrationToDatabase(user.uid)
                         uploadPicture(user.uid,4)
 
 
                     }
+                }.addOnFailureListener {
+                    Log.d("debug: ","sign up failure ${it.message}")
                 }
 
 
@@ -258,6 +263,7 @@ class UserRegister : AppCompatActivity() {
         var registration = FirebaseFirestore.getInstance().collection("new_registration")
         var newRegister = HashMap<String,String>()
         newRegister.put("uid",user.uid)
+        newRegister.put("fullname",user.fullname)
         newRegister.put("accountStatus","Unapproved")
         newRegister.put("email",user.email)
         newRegister.put("number",user.number)
@@ -270,6 +276,23 @@ class UserRegister : AppCompatActivity() {
 
         registration.document(user.uid).set(newRegister).addOnCompleteListener {
             Toast.makeText(this,"Database added",Toast.LENGTH_SHORT).show()
+        }.addOnSuccessListener {
+            val userData = HashMap<String,String>()
+            userData.put("status","unapproved" )
+            userData.put("uid",user.uid)
+
+            FirebaseFirestore.getInstance().collection("users").document(user.uid).set(userData).addOnCompleteListener {
+                val offeredLoans = HashMap<String,String>()
+                offeredLoans.put("amount","1000")
+                offeredLoans.put("interest_rate","21")
+                offeredLoans.put("is_unlocked","true")
+                FirebaseFirestore.getInstance().collection("users").document(user.uid).collection("offered_loans").document("1000").set(offeredLoans).addOnCompleteListener {
+                   Log.d("debug","Added in users table")
+                   Log.d("debug:","${user.uid}")
+
+
+                }
+            }
         }
 
     }

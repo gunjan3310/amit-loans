@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gunjanyadav.amitloans">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light">
-        <activity android:name=".AdminActivity"></activity>
+        <activity android:name=".DispatchLoan"></activity>
+        <activity android:name=".RequestLoanActivity" />
+        <activity android:name=".ListLoanRequestsActivity" />
+        <activity android:name=".NewRegistrationActionViewActivity" />
+        <activity android:name=".NewRegistrationAction" />
+        <activity android:name=".AdminActivity" />
         <activity android:name=".UserRegister" />
         <activity android:name=".UserLogin" />
         <activity android:name=".MainActivity">

@@ -4,7 +4,10 @@
 <item android:id="@+id/signout"
       android:title="signout"
       android:orderInCategory="100"
-      app:showAsAction="ifRoom"
+      app:showAsAction="never"/>
 
-    />
+<item android:id="@+id/adminPanel"
+    android:title="Admin Panel"
+    android:orderInCategory="1"
+    app:showAsAction="never"/>
 </menu>

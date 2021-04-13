@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    tools:context=".LoanFormActivity"
+    tools:context=".RequestLoanActivity"
     android:orientation="vertical">
 
         <LinearLayout
@@ -32,7 +32,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/loan_id"
+                    android:id="@+id/loanTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -51,34 +51,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Citizenship No."
+                    android:id="@+id/loanRequestCtznNo"
                     android:layout_margin="10dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Citizenship front"
+                        android:layout_gravity="center"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_launcher_background"
+                        android:layout_gravity="center"
+                        android:id="@+id/loanReqCtznFront"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Choose picture"
+                        android:layout_gravity="center"
+                        android:id="@+id/btnCtznFront"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Citizenship back"
+                        android:layout_gravity="center"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_launcher_background"
+                        android:layout_gravity="center"
+                        android:id="@+id/loanReqCtznBack"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Choose picture"
+                        android:layout_gravity="center"
+                        android:id="@+id/btnCtznBack"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
 
-                    android:src="@drawable/ic_launcher_background"
-                    android:id="@+id/ctznImage"/>
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Take picture"
-                    android:id="@+id/takePicture"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginRight="15dp"/>
-            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,37 +121,54 @@
                     android:text="Bank Details"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Type Your Account Number"
+                    android:id="@+id/loanRequestBankName"
+                    android:hint="Bank Name"
                     android:layout_margin="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Type Your Account Number"
+                    android:id="@+id/loanRequestAc"
+                    android:layout_margin="5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Re-Type Your Account Number"
+                    android:id="@+id/loanRequestReAc"
                     android:layout_margin="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Bank Branch"
+                    android:id="@+id/loanRequestBankBranch"
                     android:layout_margin="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
             <LinearLayout
@@ -134,35 +180,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Mobile No."
+                    android:id="@+id/loanRequestNumber"
                     android:layout_margin="15dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
+
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="200dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="OTP"
-
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        >
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Student ID front"
+                        android:layout_gravity="center"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_launcher_background"
+                        android:layout_gravity="center"
+                        android:id="@+id/loanReqStudentIdFront"/>
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="Send OTP"/>
+                        android:layout_height="wrap_content"
+                        android:text="Choose picture"
+                        android:layout_gravity="center"
+                        android:id="@+id/btnStudentIdFront"/>
                 </LinearLayout>
-               <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Student ID Back"
+                        android:layout_gravity="center"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_launcher_background"
+                        android:layout_gravity="center"
+                        android:id="@+id/loanReqStudentIdBack"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Choose picture"
+                        android:layout_gravity="center"
+                        android:id="@+id/btnStudentIdBack"/>
+                </LinearLayout>
+
+                <LinearLayout
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:orientation="horizontal">
@@ -175,7 +249,7 @@
                        android:layout_marginRight="30dp"
                        android:backgroundTint="@color/white"
                        android:textColor="@color/black"
-
+                       android:id="@+id/btnCancelLoanRequest"
                        android:padding="20dp"
                        android:text="cancel" />
                    <com.google.android.material.button.MaterialButton
@@ -183,7 +257,7 @@
                        android:layout_height="wrap_content"
                        android:layout_marginTop="10dp"
                        android:layout_marginRight="20dp"
-
+                       android:id="@+id/btnRequestLoan"
                        android:text="Request Loan"
 
                        android:padding="20dp"/>

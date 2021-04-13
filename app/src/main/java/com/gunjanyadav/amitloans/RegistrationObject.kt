@@ -1,4 +1,4 @@
 package com.gunjanyadav.amitloans
 
-class RegistrationObject {
+class RegistrationObject(val email:String,val name:String,val address:String, val uid:String) {
 }

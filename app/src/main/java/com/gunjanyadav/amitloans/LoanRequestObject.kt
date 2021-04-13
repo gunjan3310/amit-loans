@@ -1,4 +1,6 @@
 package com.gunjanyadav.amitloans
 
-class LoanRequestObject {
+class LoanRequestObject(val uid:String,val bankName:String,val requestPhone:String,val branch:String) {
+
+
 }

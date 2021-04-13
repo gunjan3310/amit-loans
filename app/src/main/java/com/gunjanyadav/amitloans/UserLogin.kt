@@ -3,6 +3,7 @@ package com.gunjanyadav.amitloans
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.Button
 import android.widget.EditText
@@ -19,9 +20,18 @@ class UserLogin : AppCompatActivity() {
 
 
         actionBar?.setTitle("Registration")
-        val phone:EditText = findViewById(R.id.phoneNumber)
-        val password:EditText = findViewById(R.id.password)
+        val email:EditText = findViewById(R.id.loginEmail)
+        val password:EditText = findViewById(R.id.loginPassword)
         val btnLogin: Button = findViewById(R.id.btnLogin)
+        btnLogin.setOnClickListener {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email.text.toString(),password.text.toString()).addOnSuccessListener {
+                val intent = Intent(this,MainActivity::class.java)
+                startActivityIfNeeded(intent,0)
+                finish()
+            }.addOnFailureListener {
+                Log.d("debug: ","Login failed with ${it.message}")
+            }
+        }
 
 
         val btnRegister: Button = findViewById(R.id.btnRegister)
