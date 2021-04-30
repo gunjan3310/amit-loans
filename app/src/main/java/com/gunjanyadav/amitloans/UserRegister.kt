@@ -280,16 +280,18 @@ class UserRegister : AppCompatActivity() {
             userData.put("uid",user.uid)
 
             FirebaseFirestore.getInstance().collection("users").document(user.uid).set(userData).addOnCompleteListener {
-                val offeredLoans = HashMap<String,String>()
-                offeredLoans.put("amount","1000")
-                offeredLoans.put("interest_rate","21")
-                offeredLoans.put("is_unlocked","true")
-                FirebaseFirestore.getInstance().collection("users").document(user.uid).collection("offered_loans").document("1000").set(offeredLoans).addOnCompleteListener {
-                   Log.d("debug","Added in users table")
-                   Log.d("debug:","${user.uid}")
+
+                FirebaseFirestore.getInstance().collection("offered_loans").document("1000").get().addOnCompleteListener {
+                    val offeredLoans = it.result!!.data!! as HashMap<String, String>
+                    FirebaseFirestore.getInstance().collection("users").document(user.uid).collection("offered_loans").document("1000").set(offeredLoans).addOnCompleteListener {
+                        Log.d("debug","Added in users table")
+                        Log.d("debug:","${user.uid}")
 
 
+                    }
                 }
+
+
             }
         }
 

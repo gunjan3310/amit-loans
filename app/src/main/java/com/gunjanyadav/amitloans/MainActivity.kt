@@ -50,19 +50,31 @@ class MainActivity : AppCompatActivity() {
 
         val loanslist:ArrayList<Loan> = ArrayList()
 
-        FirebaseFirestore.getInstance().collection("${if(FirebaseAuth.getInstance().currentUser == null)"/offered_loans" else "users/${FirebaseAuth.getInstance().currentUser!!.uid}/offered_loans"}").get().addOnCompleteListener {
-            var map:Map<String,Objects>
-            for(document in it.result!!){
-                //Log.d("Loan Item","${document.id}")
-                map = document.data as Map<String, Objects>
-                val loanItem: Loan = Loan(document.id.toString().toInt(),map.get("interest_rate").toString().toFloat(),map.get("is_unlocked").toString().toBoolean())
+        FirebaseFirestore.getInstance()
+                .collection("${if(FirebaseAuth.getInstance().currentUser == null)"/offered_loans" else "users/${FirebaseAuth.getInstance().currentUser!!.uid}/offered_loans"}")
+                .get().addOnCompleteListener {myOfferedLoans->
+            FirebaseFirestore.getInstance().collection("offered_loans").get().addOnCompleteListener {mainOfferedLoansList->
+                var map:Map<String,Objects>
+                for((my,main) in (myOfferedLoans.result!!).zip(mainOfferedLoansList.result!!)){
+                    Log.d("debug:","Individual id = ${my.data!!.get("id").toString()} and Main id = ${main.data!!.get("id").toString()}")
+                    if(my.data!!.get("id").toString() == main.data!!.get("id").toString()){
 
-                loanslist.add(loanItem)
+                        val loanItem: Loan = Loan(
+                                main.data!!.get("amount").toString().toInt(),
+                                main.data!!.get("interest_rate").toString().toFloat(),
+                                my.data!!.get("is_unlocked").toString().toBoolean()
+                        )
+
+                        loanslist.add(loanItem)
+                    }
+                    //Log.d("Loan Item","${document.id}")
+
+                }
+                recyclerView = findViewById(R.id.loanslist)
+                recyclerView.layoutManager = LinearLayoutManager(this)
+                loansListAdapter = ListAdapter(applicationContext,loanslist)
+                recyclerView.adapter = loansListAdapter
             }
-            recyclerView = findViewById(R.id.loanslist)
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            loansListAdapter = ListAdapter(applicationContext,loanslist)
-            recyclerView.adapter = loansListAdapter
 
         }
 
