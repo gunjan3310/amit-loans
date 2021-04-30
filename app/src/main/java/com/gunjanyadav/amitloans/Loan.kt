@@ -9,4 +9,12 @@ class Loan(val loanAmount:Int,val loanInterest:Float,val isUnlocked:Boolean) {
 
 }
 
+class OfferedLoans{
+    companion object{
+
+    }
+}
+
+
+
 

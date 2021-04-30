@@ -22,17 +22,18 @@ class ListLoanRequestsActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.loanRequestList)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        FirebaseFirestore.getInstance().collection("loan_request").get().addOnCompleteListener {
+        FirebaseFirestore.getInstance().collection("loan_request").whereEqualTo("status","unapproved").get().addOnCompleteListener {
             for(document in it.result!!){
-                if(document.data.get("denied_by").toString() == "null"){
-                    val item = LoanRequestObject(
+                val item = LoanRequestObject(
                         document.id,
                         document.data.get("bankName").toString(),
                         document.data.get("phone").toString(),
-                        document.data.get("bankBranch").toString()
-                    )
-                    list.add(item)
-                }
+                        document.data.get("bankBranch").toString(),
+                        document.data.get("amount").toString(),
+                        document.data.get("requested_on").toString()
+                )
+                list.add(item)
+               
             }
 
             val listAdapter = ListLoanRequestListAdapter(this,list)

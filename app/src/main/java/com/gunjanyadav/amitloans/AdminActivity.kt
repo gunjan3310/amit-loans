@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.gunjanyadav.amitloans.confirmloanreturn.ConfirmLoanReturn
+import com.gunjanyadav.amitloans.dispatch.DispatchListActivity
 
 class AdminActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +36,17 @@ class AdminActivity : AppCompatActivity() {
             loanRequestAdminCard.setOnClickListener {
                 startActivity(Intent(this,ListLoanRequestsActivity::class.java))
             }
+
+            val dispatchListCard = findViewById<CardView>(R.id.dispatchCard)
+            dispatchListCard.setOnClickListener {
+                startActivity(Intent(this,DispatchListActivity::class.java))
+            }
+
+            val confirmLoanReturnCard = findViewById<CardView>(R.id.confirmLoanReturnCard)
+            confirmLoanReturnCard.setOnClickListener {
+                startActivity(Intent(this, ConfirmLoanReturn::class.java))
+            }
+
             }
             else{
             finish()

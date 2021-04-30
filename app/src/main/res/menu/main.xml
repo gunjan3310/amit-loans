@@ -10,4 +10,8 @@
     android:title="Admin Panel"
     android:orderInCategory="1"
     app:showAsAction="never"/>
+<item android:id="@+id/returnLoanMenuItem"
+      android:title="Return Loan"
+    android:orderInCategory="2"
+    app:showAsAction="never"/>
 </menu>

@@ -6,4 +6,149 @@
     android:layout_height="match_parent"
     tools:context=".returnLoan.ReturnLoanActivity">
 
+    <TextView
+        android:id="@+id/returnLoanOfDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2074/4/5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/returnLoanTitle" />
+
+    <TextView
+        android:id="@+id/returnLoanTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Return Loan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/returnLoanProofImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="284dp"
+        app:layout_constraintEnd_toStartOf="@+id/returnedLoanChooseProof"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/returnLoanOfDate"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <Button
+        android:id="@+id/returnLoanPayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Return Loan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/returnLoanProofImage"
+        app:layout_constraintTop_toBottomOf="@+id/returnLoanProofImage" />
+
+
+    <TextView
+        android:id="@+id/returnLoanPaymentMethodText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Payment By"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/returnLoanOfDate" />
+
+    <TextView
+        android:id="@+id/returnedLoanTransactionIdLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="Transaction ID"
+        app:layout_constraintBottom_toBottomOf="@+id/returnLoanTransactionId"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/returnLoanTransactionId" />
+
+    <EditText
+        android:id="@+id/returnLoanTransactionId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/returnedLoanTransactionIdLabel"
+        app:layout_constraintTop_toBottomOf="@+id/returnLoanPaymentMethodRadioGroup" />
+
+    <TextView
+        android:id="@+id/returnedLoanDepositedByLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Deposited By"
+        app:layout_constraintBottom_toBottomOf="@+id/returnLoanDepositedBy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/returnLoanDepositedBy" />
+
+    <EditText
+        android:id="@+id/returnLoanDepositedBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.519"
+        app:layout_constraintStart_toEndOf="@+id/returnedLoanDepositedByLabel"
+        app:layout_constraintTop_toBottomOf="@+id/returnLoanTransactionId" />
+
+    <Button
+        android:id="@+id/returnedLoanChooseProof"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Proof Picture"
+        app:layout_constraintBottom_toBottomOf="@+id/returnLoanProofImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/returnLoanProofImage" />
+
+    <RadioGroup
+        android:id="@+id/returnLoanPaymentMethodRadioGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="98dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <RadioButton
+            android:id="@+id/returnLoanByEsewa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1
+"
+            android:text="E-Sewa"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/returnLoanByEsewa" />
+
+        <RadioButton
+            android:id="@+id/returnLoanByBank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1
+"
+            android:text="Bank"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/returnLoanByEsewa" />
+
+        <RadioButton
+            android:id="@+id/returnLoanByIME"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1
+"
+            android:text="Other"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/returnLoanByEsewa" />
+
+    </RadioGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

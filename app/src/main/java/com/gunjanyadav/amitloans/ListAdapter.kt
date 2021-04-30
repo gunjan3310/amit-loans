@@ -36,8 +36,8 @@ class ListAdapter(val context: Context, list: ArrayList<Loan>): RecyclerView.Ada
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item: Loan = loans.get(position)
 
-        holder.loanAmount.setText(item.loanAmount.toString())
-        holder.interest.setText(item.loanInterest.toString())
+        holder.loanAmount.text ="Rs. "+ item.loanAmount.toString()
+        holder.interest.text = item.loanInterest.toString()+" Interest Rate is applicable on this loan"
         holder.isLocked.setImageResource(if(item.isUnlocked == true)R.drawable.ic_launcher_foreground else R.drawable.ic_launcher_background)
         holder.itemView.setOnClickListener{
 
@@ -53,7 +53,7 @@ class ListAdapter(val context: Context, list: ArrayList<Loan>): RecyclerView.Ada
                 {
                     val i = Intent(context,RequestLoanActivity::class.java)
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    i.putExtra("loanItem",holder.loanAmount.text.toString())
+                    i.putExtra("amount",item.loanAmount.toString())
                     context.startActivity(i)
 
                 } else Toast.makeText(context,"This loan is unlocked",Toast.LENGTH_SHORT).show()

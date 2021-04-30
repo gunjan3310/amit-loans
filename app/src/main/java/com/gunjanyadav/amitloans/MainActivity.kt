@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.gunjanyadav.amitloans.returnLoan.ReturnLoanActivity
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.lang.NullPointerException
@@ -108,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         var isAdmin:Boolean = false
         val signOutBtn = menu!!.findItem(R.id.signout)
         val adminPanelBtn = menu!!.findItem(R.id.adminPanel)
+        val returnLoanBtn = menu!!.findItem(R.id.returnLoanMenuItem)
 
             try{
                 var admin:Boolean = false
@@ -123,11 +125,13 @@ class MainActivity : AppCompatActivity() {
             isAdmin = false
             }
         if (user != null) {
+            returnLoanBtn.setVisible(true)
             signOutBtn.setVisible(true)
            // Log.d("debug:", "user not null and isAdmin is $isAdmin")
 
 
         } else {
+            returnLoanBtn.setVisible(false)
             signOutBtn.setVisible(false)
             adminPanelBtn.isVisible = false
         }
@@ -153,6 +157,10 @@ class MainActivity : AppCompatActivity() {
             R.id.adminPanel ->{
                 val intent = Intent(this,AdminActivity::class.java)
                 startActivity(intent)
+            }
+            R.id.returnLoanMenuItem ->{
+                val i = Intent(this,ReturnLoanActivity::class.java)
+                startActivity(i)
             }
         }
         return super.onOptionsItemSelected(item)

@@ -146,16 +146,16 @@ class NewRegistrationActionViewActivity : AppCompatActivity() {
     }
 
     private fun showPicture(index:Int){
-        val intent = Intent()
+        val i = Intent()
 
-        intent.setType("image/*")
-        intent.action = Intent.ACTION_VIEW
+        i.setType("image/*")
+        i.action = Intent.ACTION_VIEW
 
          val uriPath = MediaStore.Images.Media.insertImage(contentResolver,images[keys[index]],"${uid}_${keys[index]}",null)
-        intent.data = Uri.parse(uriPath)
+        i.data = Uri.parse(uriPath)
 
         imageUriForDeletion.add(Uri.parse(uriPath))
-        startActivity(intent)
+        startActivity(i)
         Log.d("debug:","file path is '$uriPath'")
 
     }

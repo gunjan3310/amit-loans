@@ -40,7 +40,9 @@ class ListLoanRequestListAdapter(val context: Context,list:ArrayList<LoanRequest
                                 "Phone Number: ${it.result!!.get("number").toString()}\n"+
                                 "Loan Request number:${list.get(position).requestPhone}\n"+
                                 "Bank: ${list.get(position).bankName}\n"+
-                                "Branch:${list.get(position).branch}"
+                                "Branch:${list.get(position).branch}\n"+
+                                "Amount: Rs. ${list.get(position).amount}\n" +
+                                "Requested oN: ${list.get(position).requestedOn}"
             val loanRequester:String = list.get(position).uid
             holder.itemView.setOnClickListener {
 
@@ -49,13 +51,13 @@ class ListLoanRequestListAdapter(val context: Context,list:ArrayList<LoanRequest
                 alertBox.setMessage("What do you want to do?")
                 alertBox.setPositiveButton("Approve"){positive, which->
                     Toast.makeText(context,"Loan Approved!!", Toast.LENGTH_SHORT).show()
-                    FirebaseFirestore.getInstance().collection("loan_request").document(loanRequester).update(mapOf("approved_by" to uid))
+                    FirebaseFirestore.getInstance().collection("loan_request").document(loanRequester).update(mapOf("approved_by" to uid, "status" to "approved"))
                     
 
                 }
                 alertBox.setNegativeButton("Deny"){negative, which->
                     Toast.makeText(context,"Loan Denied!!", Toast.LENGTH_SHORT).show()
-                    FirebaseFirestore.getInstance().collection("loan_request").document(loanRequester).update(mapOf("denied_by" to "$uid"))
+                    FirebaseFirestore.getInstance().collection("loan_request").document(loanRequester).update(mapOf("denied_by" to "$uid", "status" to "denied"))
 
 
                 }

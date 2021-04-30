@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.icu.util.Calendar
 import android.media.Image
 import android.media.ThumbnailUtils
 import android.net.Uri
@@ -15,7 +16,11 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.gunjanyadav.amitloans.returnLoan.dateRequested
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 class RequestLoanActivity : AppCompatActivity() {
     val CITIZEN_FRONT = 0
@@ -25,7 +30,7 @@ class RequestLoanActivity : AppCompatActivity() {
 
     val keys = arrayOf("ctznF","ctznB","stdIdF","stdIdB")
     val titles = arrayOf("Citizenship Front","Citizenship Back","Student ID Front","Student ID Back")
-
+    lateinit var requestedDate:String
     lateinit var imagesUri:HashMap<String,Uri>
     lateinit var imgCtznF:ImageView
     lateinit var imgCtznB:ImageView
@@ -53,6 +58,7 @@ class RequestLoanActivity : AppCompatActivity() {
         //add date parameter in loan request database and all other places
         val data = HashMap<String,String>()
         data.put("uid",uid)
+        data.put("amount",intent.extras!!.getString("amount").toString())
         data.put("ctznNo",ctznNo.editText!!.text.toString())
         data.put("bankName",bankName.editText!!.text.toString())
         data.put("bankBranch",bankBranch.editText!!.text.toString())
@@ -60,13 +66,14 @@ class RequestLoanActivity : AppCompatActivity() {
         data.put("reAcNum",reAcNum.editText!!.text.toString())
         data.put("phone",phone.editText!!.text.toString())
         data.put("status","unapproved")
+        data.put("requested_on",requestedDate)
         data.put("approved_by","")
         data.put("dispatched_by","")
         data.put("returned_recieved_by","")
-        data.put(keys[0],"loan_request/$uid/${keys[0]}")
-        data.put(keys[1],"loan_request/$uid/${keys[1]}")
-        data.put(keys[2],"loan_request/$uid/${keys[2]}")
-        data.put(keys[3],"loan_request/$uid/${keys[3]}")
+        data.put(keys[0],"loan_request/$uid/$requestedDate/${keys[0]}")
+        data.put(keys[1],"loan_request/$uid/$requestedDate/${keys[1]}")
+        data.put(keys[2],"loan_request/$uid/$requestedDate/${keys[2]}")
+        data.put(keys[3],"loan_request/$uid/$requestedDate/${keys[3]}")
         FirebaseFirestore.getInstance().collection("loan_request").document("$uid").set(data).addOnSuccessListener {
             Toast.makeText(this,"Loan requested successfully.",Toast.LENGTH_SHORT).show()
         }
@@ -75,8 +82,10 @@ class RequestLoanActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_loan)
+        val dateFormat = SimpleDateFormat("dd-MM-YYYY")
+        requestedDate = dateFormat.format(Date())
 
-        findViewById<TextView>(R.id.loanTitle).setText("Rs. "+intent.extras!!.getString("loanItem"))
+        findViewById<TextView>(R.id.loanTitle).setText("Rs. "+intent.extras!!.getString("amount"))
 
         ctznNo = findViewById(R.id.loanRequestCtznNo)
         bankName = findViewById(R.id.loanRequestBankName)
@@ -190,7 +199,10 @@ class RequestLoanActivity : AppCompatActivity() {
     fun uploadPictureToFirebase(n:Int){
 
         val pd = ProgressDialog(this)
-        FirebaseStorage.getInstance().reference.child("loan_request/$uid/${keys[n]}.jpg").putFile(imagesUri.get(keys[n])!!).addOnProgressListener {
+        pd.setTitle("Uploading Documents")
+        pd.setMessage("Please hold on")
+        pd.setCanceledOnTouchOutside(false)
+        FirebaseStorage.getInstance().reference.child("loan_request/$uid/$requestedDate/${keys[n]}.jpg").putFile(imagesUri.get(keys[n])!!).addOnProgressListener {
             pd.show()
             pd.setTitle(titles[n])
             pd.setMessage("${ it.bytesTransferred * 100 / it.totalByteCount }% of 100%")

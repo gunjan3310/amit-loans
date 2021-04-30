@@ -141,8 +141,6 @@ class UserRegister : AppCompatActivity() {
             when(requestCode){
                 GET_PP ->{
                     val imageUri: Uri? = data!!.data
-//                    val image:String? = imageUri!!.path
-//                    Log.d("Image Path",image!!)
                     val image = imageForView(imageUri)
                     profilePicture.setImageBitmap(ThumbnailUtils.extractThumbnail(image,200,200))
                     profilePicture.setTag("image")
