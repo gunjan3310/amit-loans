@@ -3,6 +3,7 @@ package com.gunjanyadav.amitloans
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -46,23 +47,9 @@ class ListLoanRequestListAdapter(val context: Context,list:ArrayList<LoanRequest
             val loanRequester:String = list.get(position).uid
             holder.itemView.setOnClickListener {
 
-                val alertBox = AlertDialog.Builder(context)
-                alertBox.setTitle("CONFIRMATION")
-                alertBox.setMessage("What do you want to do?")
-                alertBox.setPositiveButton("Approve"){positive, which->
-                    Toast.makeText(context,"Loan Approved!!", Toast.LENGTH_SHORT).show()
-                    FirebaseFirestore.getInstance().collection("loan_request").document(loanRequester).update(mapOf("approved_by" to uid, "status" to "approved"))
-                    
-
-                }
-                alertBox.setNegativeButton("Deny"){negative, which->
-                    Toast.makeText(context,"Loan Denied!!", Toast.LENGTH_SHORT).show()
-                    FirebaseFirestore.getInstance().collection("loan_request").document(loanRequester).update(mapOf("denied_by" to "$uid", "status" to "denied"))
-
-
-                }
-                alertBox.setCancelable(false)
-                alertBox.create().show()
+                val i = Intent(context,ListLoanRequestViewActivity::class.java)
+                i.putExtra("uid",list.get(position).uid)
+                context.startActivity(i)
 
             }
         }

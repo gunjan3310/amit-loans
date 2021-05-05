@@ -9,8 +9,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -46,6 +49,23 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this,"Not connected to Internet!!",Toast.LENGTH_LONG).show()
             }
         }
+        var noticeCard:CardView = findViewById(R.id.mainActivityNoticeCard)
+        val msgTextView = findViewById<TextView>(R.id.mainActivityNoticeCardMsgTextView)
+        val user:FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        if(user != null){
+            FirebaseFirestore.getInstance().collection("notice").document(user.uid).get().addOnSuccessListener {
+                if(it.exists()){
+                    msgTextView.text = it.data!!.get("message").toString()
+
+                }else{
+                    msgTextView.text = "Message will appear here in case of problem with payment."
+                    
+                }
+            }
+
+        }else {
+            noticeCard.isVisible = false
+        }
 
 
         val loanslist:ArrayList<Loan> = ArrayList()
@@ -56,13 +76,14 @@ class MainActivity : AppCompatActivity() {
             FirebaseFirestore.getInstance().collection("offered_loans").get().addOnCompleteListener {mainOfferedLoansList->
                 var map:Map<String,Objects>
                 for((my,main) in (myOfferedLoans.result!!).zip(mainOfferedLoansList.result!!)){
-                    Log.d("debug:","Individual id = ${my.data!!.get("id").toString()} and Main id = ${main.data!!.get("id").toString()}")
+                    //Log.d("debug:","Individual id = ${my.data!!.get("id").toString()} and Main id = ${main.data!!.get("id").toString()}")
                     if(my.data!!.get("id").toString() == main.data!!.get("id").toString()){
 
                         val loanItem: Loan = Loan(
                                 main.data!!.get("amount").toString().toInt(),
                                 main.data!!.get("interest_rate").toString().toFloat(),
-                                my.data!!.get("is_unlocked").toString().toBoolean()
+                                my.data!!.get("is_unlocked").toString().toBoolean(),
+                                main.data!!.get("return_in").toString().toInt()
                         )
 
                         loanslist.add(loanItem)
@@ -122,11 +143,14 @@ class MainActivity : AppCompatActivity() {
         val signOutBtn = menu!!.findItem(R.id.signout)
         val adminPanelBtn = menu!!.findItem(R.id.adminPanel)
         val returnLoanBtn = menu!!.findItem(R.id.returnLoanMenuItem)
+        val loanStatus = menu!!.findItem(R.id.loanStatusMenuItem)
+        val help = menu!!.findItem(R.id.helpMenuItem)
 
             try{
                 var admin:Boolean = false
                     FirebaseFirestore.getInstance().collection("/admin").document(user!!.uid /*"ultimate_admin_uid"*/).get().addOnCompleteListener {
                         admin = it.result!!["isAdmin"].toString().toBoolean()
+                        //Log.d("debug:","Admin is $admin and uid is ${user!!.uid}")
                         adminPanelBtn.isVisible = admin
 
                     }
@@ -137,15 +161,44 @@ class MainActivity : AppCompatActivity() {
             isAdmin = false
             }
         if (user != null) {
-            returnLoanBtn.setVisible(true)
+
+            FirebaseFirestore.getInstance().collection("loan_request").document(user.uid).get().addOnCompleteListener {
+
+                try{
+                    if (it.result!!.exists() && it.result!!.data!!.get("status").toString() == "SENT") {
+                        returnLoanBtn.setVisible(true)
+                        loanStatus.setVisible((true))
+                        Log.d("debug:", "Loan status is sent")
+                    } else if (it.result!!.exists() && it.result!!.data!!.get("status").toString() == "DO_CONFIRM_RETURN") {
+                        returnLoanBtn.isEnabled = false
+                        loanStatus.isEnabled = false
+                        Log.d("debug:", "loan status is do confirm return")
+                    } else {
+                        returnLoanBtn.isEnabled = false
+                        loanStatus.isEnabled = false
+                    }
+                }catch(e:Exception) {
+                    returnLoanBtn.isEnabled = false
+                    loanStatus.isEnabled = false
+                }
+
+            }.addOnFailureListener{
+                returnLoanBtn.isEnabled = false
+                loanStatus.isEnabled = false
+            }
+
+
+
             signOutBtn.setVisible(true)
-           // Log.d("debug:", "user not null and isAdmin is $isAdmin")
+            Log.d("debug:", "user not null and isAdmin is $isAdmin")
 
 
         } else {
             returnLoanBtn.setVisible(false)
             signOutBtn.setVisible(false)
             adminPanelBtn.isVisible = false
+            loanStatus.setVisible(false)
+
         }
 
 
@@ -172,6 +225,14 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.returnLoanMenuItem ->{
                 val i = Intent(this,ReturnLoanActivity::class.java)
+                startActivity(i)
+            }
+            R.id.loanStatusMenuItem ->{
+                val i = Intent(this,LoanStatusActivity::class.java)
+                startActivity(i)
+            }
+            R.id.helpMenuItem ->{
+                val i = Intent(this,HelpActivity::class.java)
                 startActivity(i)
             }
         }

@@ -2,46 +2,48 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/confirmLoanReturnLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".confirmloanreturn.ConfirmLoanReturnActivity">
+    tools:context=".LoanStatusActivity">
 
     <TextView
-        android:id="@+id/confirmLoanReturnIndividualTitle"
+        android:id="@+id/loanStatusTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm Loan Return"
+        android:text="Your Loan Status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/confirmLoanReturnIndividualInfo"
+        android:id="@+id/loanStatusAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="ConfirmationDetails"
+        android:text="Loan of"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmLoanReturnIndividualTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/loanStatusTitle" />
+
+    <TextView
+        android:id="@+id/loanStatusInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loanStatusAmount" />
 
     <ImageView
-        android:id="@+id/confirmLoanReturnProofImage"
+        android:id="@+id/loanStatusSentProofImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmLoanReturnIndividualInfo"
+        app:layout_constraintTop_toBottomOf="@+id/loanStatusInfo"
         app:srcCompat="@drawable/ic_launcher_background" />
-
-    <Button
-        android:id="@+id/confirmLoanReturnIndividualConfirmBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Acknoledge"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmLoanReturnProofImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

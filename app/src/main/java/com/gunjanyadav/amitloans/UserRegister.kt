@@ -81,11 +81,12 @@ class UserRegister : AppCompatActivity() {
         }
         register = findViewById(R.id.register)
         register.setOnClickListener{
+            register.isEnabled = false
             val validated: Boolean = validateTextFields(fullName) && validateTextFields(email) && validateTextFields(password) &&
                     validateTextFields(repassword) && validateTextFields(phoneNumber) && validateTextFields(DOB)
                     && validatePicturesSelected(ctznPictureFront) && validatePicturesSelected(ctznPictureBack) && validatePicturesSelected(studentIdFront) && validatePicturesSelected(studentIdBack)
                     && validatePicturesSelected(profilePicture) &&  validateTermsAndConditions(termAgreement) && validateMatchPasswords(password,repassword)
-            if(validated==true)createNewUserAndUploadDocuments()
+            if(validated==true)createNewUserAndUploadDocuments() else register.isEnabled = true
 
 
 
@@ -220,6 +221,7 @@ class UserRegister : AppCompatActivity() {
             val homeButton = findViewById<Button>(R.id.btnHome)
             homeButton.setOnClickListener {
                 val intent = Intent(this,MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivityIfNeeded(intent,0)
                 finish()
             }
@@ -242,7 +244,10 @@ class UserRegister : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(user.email, password.text.toString())
                 .addOnCompleteListener(this){
 
-                    if(!it.isSuccessful)Toast.makeText(this, "Email \"${user.email}\" already used", Toast.LENGTH_LONG).show()
+                    if(!it.isSuccessful){
+                        Toast.makeText(this, "Email \"${user.email}\" already used", Toast.LENGTH_LONG).show()
+                        register.isEnabled = true
+                    }
                     else{
                         user.uid = it.result?.user?.uid!!
                         addUserRegistrationToDatabase(user.uid)

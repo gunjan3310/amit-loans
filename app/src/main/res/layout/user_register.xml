@@ -172,7 +172,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Citizenship back"
+                android:text="Student Id back"
                 android:layout_gravity="center"/>
             <ImageView
                 android:layout_width="wrap_content"
@@ -200,7 +200,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="this is to agree that you do and will do comply with the agreement of this app.this is to agree that you do and will do comply with the agreement of this app.this is to agree that you do and will do comply with the agreement of this app.this is to agree that you do and will do comply with the agreement of this app.this is to agree that you do and will do comply with the agreement of this app."
+                android:text="This is to understand you agree with the terms and conditions of this service."
                 android:layout_weight="8"/>
         </LinearLayout>
 

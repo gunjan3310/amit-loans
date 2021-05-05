@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Loan(val loanAmount:Int,val loanInterest:Float,val isUnlocked:Boolean) {
+class Loan(val loanAmount:Int,val loanInterest:Float,val isUnlocked:Boolean, val returnIn:Int) {
 
 }
 

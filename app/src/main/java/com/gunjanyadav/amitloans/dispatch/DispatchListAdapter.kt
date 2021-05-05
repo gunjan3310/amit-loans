@@ -39,7 +39,7 @@ class DispatchListAdapter(val context: Context,var list: ArrayList<DispatchObjec
         var approvedBy:String = ""
         var status:String = ""
 
-        holder.acNumber.text =  "Approved By: ${list.get(position).acNumber}"
+        holder.acNumber.text =  "A/C : ${list.get(position).acNumber}"
         holder.bankName.text = "Bank Name: ${list.get(position).bankName}"
         holder.requestedOn.text =  "Requested On: ${list.get(position).requestedOn}"
 
@@ -53,7 +53,8 @@ class DispatchListAdapter(val context: Context,var list: ArrayList<DispatchObjec
                     approvedBy = it.result!!.data!!.get("name").toString()
                     list.get(position).approvedBy = approvedBy
 
-                    holder.approvedBy.text = "Approved By: ${approvedBy}"
+                    holder.approvedBy.text = "Approved By: ${approvedBy}\n"+
+                                                "Status: ${list.get(position).status}"
                 }
 
                 holder.itemView.setOnClickListener {

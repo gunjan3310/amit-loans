@@ -44,7 +44,8 @@ class ReturnLoanActivity : AppCompatActivity() {
         returnLoanTitle = findViewById(R.id.returnLoanTitle)
         loanDate = findViewById(R.id.returnLoanOfDate)
         FirebaseFirestore.getInstance().collection("loan_request").document(FirebaseAuth.getInstance().currentUser!!.uid).get().addOnSuccessListener {
-            if(it.exists()){
+            if(it.exists() && it.data!!.get("status").toString() == "SENT"){
+
 
                 returnLoanTitle.text = returnLoanTitle.text.toString() + it.data!!.get("amount").toString()
                 dateRequested = it.data!!.get("requested_on").toString()
@@ -52,7 +53,8 @@ class ReturnLoanActivity : AppCompatActivity() {
                 uid = it.data!!.get("uid").toString()
             }else{
                 //open history page showing no loans to pay
-                finish()
+                    Toast.makeText(this,"Loan is either not approved or not sent by loaner.",Toast.LENGTH_SHORT).show()
+                    finish()
             }
         }
         returnLoanBtn = findViewById(R.id.returnLoanPayButton)
@@ -66,6 +68,7 @@ class ReturnLoanActivity : AppCompatActivity() {
             val i = Intent()
             i.setType("image/*")
             i.setAction(Intent.ACTION_GET_CONTENT)
+            i.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             startActivityForResult(i, PICK_PROOF)
         }
 
@@ -108,6 +111,7 @@ class ReturnLoanActivity : AppCompatActivity() {
 
                             //upload loan return proof
                             val pd: ProgressDialog = ProgressDialog(this)
+
                             pd.setTitle("Uploading Payment Proof")
                             pd.show()
                             FirebaseStorage.getInstance().reference.child("loan_request/${loan.documents.get(0).data!!.get("uid").toString()}/${returnedOn}/return_proof.jpg").putFile(proofImageUri).addOnProgressListener {
@@ -117,29 +121,104 @@ class ReturnLoanActivity : AppCompatActivity() {
                                 //set status to DO_CONFIRM_RETURN
                                 data.put("return_proof_path", "loan_request/$uid/$returnedOn/return_proof.jpg")
                                 data.put("status", "DO_CONFIRM_RETURN")
+                                data.put("deposited_by", depositedBy.text.toString())
+                                data.put("esewa_deposit_transaction_id", transactionId.text.toString())
                                 data.put("payed_on", SimpleDateFormat("dd-MM-YYYY G").format(Date()))
 
                                 FirebaseFirestore.getInstance().collection("confirm_return_recieve").document(uid).set(data).addOnSuccessListener {
-                                    Toast.makeText(this, "Sent for Confirmation", Toast.LENGTH_SHORT).show()
+                                    FirebaseFirestore.getInstance().collection("loan_request").document(uid).update(mapOf("status" to "DO_CONFIRM_RETURN")).addOnSuccessListener {
+                                        Toast.makeText(this, "Sent for Confirmation", Toast.LENGTH_SHORT).show()
+                                        finish()
+                                        //goto payment recieved confirmation page
+
+                                    }
 
                                 }
+
                             }
+
                         }
 
                     } else {
                         Toast.makeText(this, "Fill the mentioned entries.", Toast.LENGTH_SHORT).show()
                     }
+
                 }
 
                 R.id.returnLoanByBank -> {
                     if(proofImage.tag.equals("return_proof") && depositedBy.text.toString().isNotEmpty() ){
 
+
+                        //get data for loan request document with status == SENT
+                        FirebaseFirestore.getInstance().collection("loan_request").whereEqualTo("status", "SENT").get().addOnSuccessListener { loan ->
+                            val returnedOn = loan.documents.get(0).data!!.get("requested_on").toString()
+                            val data = loan.documents.get(0).data!! as HashMap<String, String>
+
+                            //upload loan return proof
+                            val pd: ProgressDialog = ProgressDialog(this)
+                            pd.setTitle("Uploading Payment Proof")
+                            pd.show()
+                            FirebaseStorage.getInstance().reference.child("loan_request/${loan.documents.get(0).data!!.get("uid").toString()}/${returnedOn}/return_proof.jpg").putFile(proofImageUri).addOnProgressListener {
+                                pd.setMessage("${(it.bytesTransferred / it.totalByteCount) * 100}% of 100%")
+                            }.addOnSuccessListener {
+                                pd.dismiss()
+                                //set status to DO_CONFIRM_RETURN
+                                data.put("return_proof_path", "loan_request/$uid/$returnedOn/return_proof.jpg")
+                                data.put("status", "DO_CONFIRM_RETURN")
+                                data.put("deposited_by", depositedBy.text.toString())
+                                data.put("payed_on", SimpleDateFormat("dd-MM-YYYY G").format(Date()))
+
+                                FirebaseFirestore.getInstance().collection("confirm_return_recieve").document(uid).set(data).addOnSuccessListener {
+                                    FirebaseFirestore.getInstance().collection("loan_request").document(uid).update(mapOf("status" to "DO_CONFIRM_RETURN")).addOnSuccessListener {
+                                    Toast.makeText(this, "Sent for Confirmation", Toast.LENGTH_SHORT).show()
+                                        finish()
+                                    }
+
+                                }
+
+                            }
+                        }
+
+                    }else{
+                        Toast.makeText(this, "Fill the mentioned entries.", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 R.id.returnLoanByIME -> {
                     if(proofImage.tag.equals("return_proof") && depositedBy.text.toString().isNotEmpty() && transactionId.text.toString().isNotEmpty()){
+                        FirebaseFirestore.getInstance().collection("loan_request").whereEqualTo("status", "SENT").get().addOnSuccessListener { loan ->
+                            val returnedOn = loan.documents.get(0).data!!.get("requested_on").toString()
+                            val data = loan.documents.get(0).data!! as HashMap<String, String>
 
+                            //upload loan return proof
+                            val pd: ProgressDialog = ProgressDialog(this)
+                            pd.setTitle("Uploading Payment Proof")
+                            pd.show()
+                            FirebaseStorage.getInstance().reference.child("loan_request/${loan.documents.get(0).data!!.get("uid").toString()}/${returnedOn}/return_proof.jpg").putFile(proofImageUri).addOnProgressListener {
+                                pd.setMessage("${(it.bytesTransferred / it.totalByteCount) * 100}% of 100%")
+                            }.addOnSuccessListener {
+                                pd.dismiss()
+                                //set status to DO_CONFIRM_RETURN
+                                data.put("return_proof_path", "loan_request/$uid/$returnedOn/return_proof.jpg")
+                                data.put("status", "DO_CONFIRM_RETURN")
+                                data.put("deposited_by", depositedBy.text.toString())
+                                data.put("ime_deposit_transaction_id", transactionId.text.toString())
+                                data.put("payed_on", SimpleDateFormat("dd-MM-YYYY G").format(Date()))
+
+                                FirebaseFirestore.getInstance().collection("confirm_return_recieve").document(uid).set(data).addOnSuccessListener {
+                                    FirebaseFirestore.getInstance().collection("loan_request").document(uid).update(mapOf("status" to "DO_CONFIRM_RETURN")).addOnSuccessListener {
+                                    Toast.makeText(this, "Sent for Confirmation", Toast.LENGTH_SHORT).show()
+                                        finish()
+
+                                    }
+
+                                }
+
+                            }
+                        }
+
+                    }else{
+                        Toast.makeText(this, "Fill the mentioned entries.", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

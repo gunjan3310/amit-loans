@@ -34,7 +34,7 @@ class ConfirmReturnLoanViewActivity : AppCompatActivity() {
         val proofImageView:ImageView
         proofImageView = findViewById(R.id.confirmLoanReturnProofImage)
         val confirm: Button = findViewById(R.id.confirmLoanReturnIndividualConfirmBtn)
-        val review:Button = findViewById(R.id.confirmLoanReturnIndividualReviewBtn)
+
         val info:TextView = findViewById(R.id.confirmLoanReturnIndividualInfo)
 
 
@@ -75,6 +75,14 @@ class ConfirmReturnLoanViewActivity : AppCompatActivity() {
                     FirebaseFirestore.getInstance().collection("users/${intent.extras!!.getString("uid").toString()}/history/").document(requestedOn).set(data).addOnSuccessListener {
                         FirebaseFirestore.getInstance().collection("confirm_return_recieve").document(intent.extras!!.getString("uid").toString()).delete().addOnSuccessListener {
                         FirebaseFirestore.getInstance().collection("loan_request").document(intent.extras!!.getString("uid").toString()).delete()
+                            val msg = hashMapOf<String,String>(
+                                    "message" to "Your Payment was Accepted!!"
+                            )
+                            FirebaseFirestore.getInstance().collection("notice").document(intent.extras!!.getString("uid").toString()).set(msg).addOnSuccessListener {
+                                Toast.makeText(this,"Sent msg for problem in return payment.", Toast.LENGTH_SHORT).show()
+                                FirebaseFirestore.getInstance().collection("confirm_return_recieve").document(intent.extras!!.getString("uid").toString()).delete()
+
+                            }
                         FirebaseFirestore.getInstance().collection("offered_loans").get().addOnSuccessListener {loanMainList ->
                             FirebaseFirestore.getInstance().collection("users/${intent.extras!!.getString("uid").toString()}/offered_loans").get().addOnSuccessListener {myOfferedLoans->
                                if((myOfferedLoans.size() + 1 ) <= loanMainList.size()){
@@ -95,7 +103,18 @@ class ConfirmReturnLoanViewActivity : AppCompatActivity() {
 
                 }
                 alertBox.setNegativeButton("Problem"){negative, which->
-                    //Toast.makeText(this,"Loan Denied!!", Toast.LENGTH_SHORT).show()
+                    Log.d("debug:","Confirm payment activity intent uid is ${intent.extras!!.getString("uid").toString()}")
+                    FirebaseFirestore.getInstance().collection("loan_request").document(intent.extras!!.getString("uid").toString()).update(mapOf("status" to "SENT")).addOnSuccessListener {
+
+                        val msg = hashMapOf<String,String>(
+                                "message" to "There is some problem with your payment.Check Again!!", "status" to "negative"
+                        )
+                        FirebaseFirestore.getInstance().collection("notice").document(intent.extras!!.getString("uid").toString()).set(msg).addOnSuccessListener {
+                            Toast.makeText(this,"Sent msg for problem in return payment.", Toast.LENGTH_SHORT).show()
+                            FirebaseFirestore.getInstance().collection("confirm_return_recieve").document(intent.extras!!.getString("uid").toString()).delete()
+
+                        }
+                    }
                     //message the problem with payment
 
 

@@ -1,5 +1,6 @@
 package com.gunjanyadav.amitloans
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
@@ -56,26 +57,31 @@ class RequestLoanActivity : AppCompatActivity() {
     private fun writeToDatabase() {
 
         //add date parameter in loan request database and all other places
-        val data = HashMap<String,String>()
-        data.put("uid",uid)
-        data.put("amount",intent.extras!!.getString("amount").toString())
-        data.put("ctznNo",ctznNo.editText!!.text.toString())
-        data.put("bankName",bankName.editText!!.text.toString())
-        data.put("bankBranch",bankBranch.editText!!.text.toString())
-        data.put("acNum",acNum.editText!!.text.toString())
-        data.put("reAcNum",reAcNum.editText!!.text.toString())
-        data.put("phone",phone.editText!!.text.toString())
-        data.put("status","unapproved")
-        data.put("requested_on",requestedDate)
-        data.put("approved_by","")
-        data.put("dispatched_by","")
-        data.put("returned_recieved_by","")
-        data.put(keys[0],"loan_request/$uid/$requestedDate/${keys[0]}")
-        data.put(keys[1],"loan_request/$uid/$requestedDate/${keys[1]}")
-        data.put(keys[2],"loan_request/$uid/$requestedDate/${keys[2]}")
-        data.put(keys[3],"loan_request/$uid/$requestedDate/${keys[3]}")
-        FirebaseFirestore.getInstance().collection("loan_request").document("$uid").set(data).addOnSuccessListener {
-            Toast.makeText(this,"Loan requested successfully.",Toast.LENGTH_SHORT).show()
+        FirebaseFirestore.getInstance().collection("offered_loans").document(intent.extras!!.getString("amount").toString()).get().addOnSuccessListener {offeredLoan->
+            val data = HashMap<String,String>()
+            data.put("uid",uid)
+            data.put("amount",intent.extras!!.getString("amount").toString())
+            data.put("ctznNo",ctznNo.editText!!.text.toString())
+            data.put("bankName",bankName.editText!!.text.toString())
+            data.put("bankBranch",bankBranch.editText!!.text.toString())
+            data.put("acNum",acNum.editText!!.text.toString())
+            data.put("reAcNum",reAcNum.editText!!.text.toString())
+            data.put("phone",phone.editText!!.text.toString())
+            data.put("interest_rate",offeredLoan.data!!.get("interest_rate").toString())
+            data.put("return_in",offeredLoan.data!!.get("amount").toString())
+            data.put("status","unapproved")
+            data.put("requested_on",requestedDate)
+            data.put("approved_by","")
+            data.put("dispatched_by","")
+            data.put("dispatched_on","Not Dispatched Yet")
+            data.put("returned_recieved_by","")
+            data.put(keys[0],"loan_request/$uid/$requestedDate/${keys[0]}.jpg")
+            data.put(keys[1],"loan_request/$uid/$requestedDate/${keys[1]}.jpg")
+            data.put(keys[2],"loan_request/$uid/$requestedDate/${keys[2]}.jpg")
+            data.put(keys[3],"loan_request/$uid/$requestedDate/${keys[3]}.jpg")
+            FirebaseFirestore.getInstance().collection("loan_request").document("$uid").set(data).addOnSuccessListener {
+                Toast.makeText(this,"Loan requested successfully.",Toast.LENGTH_SHORT).show()
+            }
         }
     }
     lateinit var uid:String
@@ -106,6 +112,7 @@ class RequestLoanActivity : AppCompatActivity() {
         val stdIdF = findViewById<Button>(R.id.btnStudentIdFront)
         val stdIdB = findViewById<Button>(R.id.btnStudentIdBack)
         val requestLoan = findViewById<Button>(R.id.btnRequestLoan)
+        val cancel = findViewById<Button>(R.id.btnCancelLoanRequest)
 
         ctznF.setOnClickListener {
             val intent = Intent()
@@ -136,14 +143,39 @@ class RequestLoanActivity : AppCompatActivity() {
         }
 
         requestLoan.setOnClickListener {
-            if(validateFields()){
-                writeToDatabase()
-                uploadPictureToFirebase(0)
+            requestLoan.isEnabled = false
+            FirebaseFirestore.getInstance().collection("loan_request").document(FirebaseAuth.getInstance().currentUser!!.uid).get().addOnSuccessListener {loan->
+                if(loan.exists()) {
+                    Toast.makeText(this, "You already applied for the loan.", Toast.LENGTH_SHORT).show()
+                }else{
+
+                    if(validateFields()){
+                        writeToDatabase()
+                        uploadPictureToFirebase(0)
+
+                    }
+                    else{
+                        requestLoan.isEnabled = true
+                        Toast.makeText(this,"Fill all the Fields",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        cancel.setOnClickListener{
+            val alertBox = AlertDialog.Builder(this)
+            alertBox.setTitle("CONFIRMATION")
+            alertBox.setMessage("What do you want to do?")
+            alertBox.setPositiveButton("Continue Loan"){positive, which->
 
             }
-            else{
-                Toast.makeText(this,"Fill all the Fields",Toast.LENGTH_SHORT).show()
+            alertBox.setNegativeButton("Cancel Loan"){negative, which->
+
+               finish()
+
             }
+            alertBox.setCancelable(false)
+            alertBox.create().show()
+
         }
 
 

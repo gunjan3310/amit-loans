@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ListAdapter(val context: Context, list: ArrayList<Loan>): RecyclerView.Adapter<ListAdapter.ViewHolder>() {
     val loans = list
@@ -36,9 +37,9 @@ class ListAdapter(val context: Context, list: ArrayList<Loan>): RecyclerView.Ada
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item: Loan = loans.get(position)
 
-        holder.loanAmount.text ="Rs. "+ item.loanAmount.toString()
-        holder.interest.text = item.loanInterest.toString()+" Interest Rate is applicable on this loan"
-        holder.isLocked.setImageResource(if(item.isUnlocked == true)R.drawable.ic_launcher_foreground else R.drawable.ic_launcher_background)
+        holder.loanAmount.text ="Rs. "+ item.loanAmount.toString()+"/-"
+        holder.interest.text = item.loanInterest.toString()+" Interest Rate is applicable on this loan and must be returned in ${item.returnIn} days."
+        holder.isLocked.setImageResource(if(item.isUnlocked == true)R.drawable.unlocked_loan else R.drawable.locked_loan)
         holder.itemView.setOnClickListener{
 
 
@@ -51,10 +52,23 @@ class ListAdapter(val context: Context, list: ArrayList<Loan>): RecyclerView.Ada
             }else{
                 if(item.isUnlocked == true)
                 {
-                    val i = Intent(context,RequestLoanActivity::class.java)
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    i.putExtra("amount",item.loanAmount.toString())
-                    context.startActivity(i)
+                    FirebaseFirestore.getInstance().collection("users").document(auth.uid).get().addOnSuccessListener {user->
+                        if(user.data!!.get("status").toString() == "approved"){
+                            FirebaseFirestore.getInstance().collection("loan_request").document(auth.uid).get().addOnSuccessListener {
+                                if(!it.exists()){
+                                    val i = Intent(context,RequestLoanActivity::class.java)
+                                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    i.putExtra("amount",item.loanAmount.toString())
+                                    i.putExtra("interest_rate",item.loanInterest)
+                                    context.startActivity(i)
+                                }else{
+                                    Toast.makeText(context,"You already have a loan.",Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }else{
+                            Toast.makeText(context,"Your Account is not approved.",Toast.LENGTH_SHORT).show()
+                        }
+                    }
 
                 } else Toast.makeText(context,"This loan is unlocked",Toast.LENGTH_SHORT).show()
             }

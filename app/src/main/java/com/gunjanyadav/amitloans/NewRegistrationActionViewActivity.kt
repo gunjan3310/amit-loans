@@ -96,11 +96,11 @@ class NewRegistrationActionViewActivity : AppCompatActivity() {
                                                         "dob" to dob.text.toString(),
                                                         "email" to email.text.toString(),
                                                         "number" to number.text.toString()
-                                                        ,"profilePicture" to "users/profile/profilePicture.jpg"
-                                                        ,"ctznF" to "users/profile/ctznF.jpg"
-                                                        ,"ctznB" to "users/profile/ctznB.jpg"
-                                                        ,"stdIdF" to "users/profile/stdIdF.jpg"
-                                                        ,"stdIdB" to "users/profile/stdIdB.jpg"
+                                                        ,"profilePicture" to "users/$uid/profile/profilePicture.jpg"
+                                                        ,"ctznF" to "users/$uid/profile/ctznFront.jpg"
+                                                        ,"ctznB" to "users/$uid/profile/ctznBack.jpg"
+                                                        ,"stdIdF" to "users/$uid/profile/stdIdF.jpg"
+                                                        ,"stdIdB" to "users/$uid/profile/stdIdB.jpg"
                                                         ,"status" to "approved"
             )
 
@@ -125,9 +125,9 @@ class NewRegistrationActionViewActivity : AppCompatActivity() {
 
             val titles = arrayOf("Profile Picture","Citizenship Front","Citizenship Back","Student ID Back","Student ID Front")
             progressDialog.setTitle(titles[n])
-            FirebaseStorage.getInstance().reference.child("users/$uid/profile/$keys.jpg").putBytes(imagesByteArray.get(keys[n])!!).addOnProgressListener {
+            FirebaseStorage.getInstance().reference.child("users/$uid/profile/${keys[n]}.jpg").putBytes(imagesByteArray.get(keys[n])!!).addOnProgressListener {
                 progressDialog.setTitle(titles[n])
-                progressDialog.setMessage("${it.bytesTransferred *100 /it.totalByteCount}")
+                progressDialog.setMessage("${it.bytesTransferred *100 /it.totalByteCount}% of 100%")
                 progressDialog.show()
             }.addOnSuccessListener {
                 progressDialog.dismiss()

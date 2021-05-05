@@ -18,6 +18,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.gunjanyadav.amitloans.R
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DispatchItemViewActivity : AppCompatActivity() {
     var imageUriForDeletion: ArrayList<Uri> = ArrayList()
@@ -95,8 +98,13 @@ class DispatchItemViewActivity : AppCompatActivity() {
                         pd.setMessage("${(it.bytesTransferred/it.totalByteCount)*100}% of 100% uploaded")
                     }.addOnSuccessListener {
                         pd.dismiss()
-                        FirebaseFirestore.getInstance().collection("loan_request").document(intent.extras!!.getString("uid")!!).update(mapOf<String,String>("status" to "SENT")).addOnSuccessListener {
-                            finish()
+                        val dispatchedDate = SimpleDateFormat("dd-MM-YYYY").format(Date())
+                        FirebaseFirestore.getInstance().collection("loan_request").document(intent.extras!!.getString("uid")!!)
+                                .update(mapOf<String,String>("dispatched_on" to "$dispatchedDate","status" to "SENT")).addOnSuccessListener {
+                                    FirebaseFirestore.getInstance().collection("notice").document(intent.extras!!.getString("uid")!!).set(mapOf("message" to "Your loan is approved","status" to "ok")).addOnSuccessListener {
+                                        finish()
+
+                                    }
 
                         }
                     }

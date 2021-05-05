@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light">
-        <activity android:name=".confirmloanreturn.ConfirmReturnLoanViewActivity"></activity>
+        <activity android:name=".HelpActivity"></activity>
+        <activity android:name=".LoanStatusActivity" />
+        <activity android:name=".ListLoanRequestViewActivity" />
+        <activity android:name=".confirmloanreturn.ConfirmReturnLoanViewActivity" />
         <activity android:name=".confirmloanreturn.ConfirmLoanReturn" />
         <activity android:name=".confirmloanreturn.ConfirmLoanReturnActivity" />
         <activity android:name=".returnLoan.ReturnLoanActivity" />
