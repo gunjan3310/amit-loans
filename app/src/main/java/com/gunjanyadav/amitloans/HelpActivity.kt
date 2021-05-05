@@ -16,7 +16,8 @@ class HelpActivity : AppCompatActivity() {
 
         val info :TextView = findViewById(R.id.helpInfo)
         val newVersion:TextView = findViewById(R.id.helpNewVersion)
-
+        val laxmiBank:TextView = findViewById(R.id.helpLaxmiBankDetails)
+        laxmiBank.text = "LAXMI BANK LIMITED\n"+"Acount Holder: Amit Shah\n"+"A/C: 11520004351\n"+"Branch: Rajbiraj\n"
         FirebaseFirestore.getInstance().collection("help").document("info").get().addOnSuccessListener {
             var infoText = ""
             for (data in it.data!!){

@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
                 }else{
                     msgTextView.text = "Message will appear here in case of problem with payment."
-                    
+
                 }
             }
 
